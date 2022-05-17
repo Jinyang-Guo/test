@@ -2,42 +2,81 @@
 layout: default
 ---
 
-# Presentations
+# Creating an Amazon FPGA Image (AFI) using AWSEducate
 
-## Vitis
+This document guides you through the steps to create an AWS Amazon FPGA Image (AFI), when using AWSEducate instance, which can run on AWS EC2 F1 instance to verify that the design works in hardware. It assumes that a full system (Vitis project) is built which consists of an *host* application (executable file) and an FPGA binary file (.xclbin).
 
-| Title | YouTube Link | PDF Link |
-| --- | --- | ---- |
-| Xilinx Platforms Introduction | [![alt text](assets/images/youtube.png) Xilinx Platforms Introduction](https://youtu.be/sb9qcgOcTDY) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/xilinx_platforms_introduction.pdf) |
-| Intro to Vitis for Acceleration Platforms | [![alt text](assets/images/youtube.png) Intro to Vitis for Acceleration Platforms](https://youtu.be/t6CvKG0NzcM) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_introduction.pdf) |
-| Vitis Tool Flow | [![alt text](assets/images/youtube.png) Vitis Tool Flow](https://youtu.be/ObfOSltWWEM) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_toolflow.pdf) |
-| Open CL Execution Model | [![alt text](assets/images/youtube.png) Open CL Execution Model](https://youtu.be/z1Yk6jctJeY) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_opencl_execution_model.pdf) |
-| Vitis Design Analysis | [![alt text](assets/images/youtube.png) Vitis Design Analysis](https://youtu.be/N941PGe9q_c) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_design_analysis.pdf) |
-| Vitis Design Methodology | [![alt text](assets/images/youtube.png) Vitis Design Methodology](https://youtu.be/W-O66ASW_ls) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_design_methodology.pdf) |
-| Host Code Optimization | [![alt text](assets/images/youtube.png) Host Code Optimization](https://youtu.be/6SqQ-tgMREg) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_host_code_optimization.pdf) |
-| Kernel Optimization | [![alt text](assets/images/youtube.png) Kernel Optimization](https://youtu.be/BD7nXF0umpo) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_kernel_optimizations.pdf) |
-| Vitis Accelerated Libraries | [![alt text](assets/images/youtube.png) Vitis Accelerated Libraries](https://youtu.be/bqttBaih_Ao) | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_accelerated_libraries.pdf) |
-| Vitis hardware debug |   | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_hardware_debug.pdf)|
-| Vitis RTL kernels Accelerated Libraries  |   | [![alt text](images/pdf.png)](https://www.xilinx.com/support/documentation/university/Vitis-Workshops/2019_2/vitis_rtl_kernels.pdf) |
+### Create an AFI
 
-# PYNQ
+1. Setup CLI and Create S3 bucket
 
-PYNQ introduction, and short lab companion videos that cover topics that are not addressed in the main presentation. We recommend watching the lab while doing the PYNQ labs.
+    - Create an empty file called *credentials* using the following commands
 
-| Title | YouTube Link |
-| --- | --- |
-| PYNQ for Compute Acceleration | [![alt text](assets/images/youtube.png) PYNQ for Compute Acceleration](https://youtu.be/WgA_FgO_rAo) |
-| Lab: Using Multiple Devices | [![alt text](assets/images/youtube.png) Lab: Using Multiple Devices](https://youtu.be/tk2XDW-Hpco)|
-| Lab: Hardware Emulation | [![alt text](assets/images/youtube.png) Lab: Hardware Emulation](https://youtu.be/ylVEo0d83iM)|
-| Lab: Packaging Your Designs | [![alt text](assets/images/youtube.png) Lab: Packaging Your Designs](https://youtu.be/S2oSliWHpsA)|
+      ```
+      cd
+      mkdir .aws
+      cd .aws
+      gedit credentials
+      ```
 
-## Overview of the Vitis flow
+    - Go to the Vocareum window and click on **Account Details**
+    - Click on the **Show** button
+    - Copy the content into the *credentials* file, save the file, and exit
+    - Create a S3 bucket which will be used for registering xclbin (Note: touch command below is necessary to have non-empty folders. The files will be copied into these sub-folders
 
-![alt tag](./images/vitis_flow.png)
+      ```
+      aws s3 mb s3://<bucket-name> --region us-east-1 
+      aws s3 mb s3://<bucket-name>/<dcp-folder-name>
+      touch FILES_GO_HERE.txt
+      aws s3 cp FILES_GO_HERE.txt s3://<bucket-name>/<dcp-folder-name>/
+      aws s3 mb s3://<bucket-name>/<logs-folder-name>
+      touch FILES_GO_HERE.txt
+      aws s3 cp FILES_GO_HERE.txt s3://<bucket-name>/<logs-folder-name>/
+      ```
+
+1. Configure aws by executing following command and providing credentials
+
+   Note that anytime you want to create AFI, the credentials file content must be updated. You must rerun the command every time before you run the create_visit_afi.sh script if this is a new session
+
+   ```
+   aws configure
+   AWS Access Key ID [****************J5NS]:  <hit enter> 
+   AWS Secret Access Key [****************N4bG]:  <hit enter>
+   Default region name [None]: us-east-1 <make sure us-east-1 is displayed, otherwise change it to it>
+   Default output format [None]: json <make sure json is displayed, otherwise change it to it>
+   ```
+
+2. Submit the xclbin to generate AFI (with extension awsxclbin) using the following command
+
+   ```
+   $VITIS_DIR/tools/create_vitis_afi.sh -xclbin=<path to an including.xclbin> -s3_bucket=<bucket-name> -s3_dcp_key=<dcp-folder-name> -s3_logs_key=<logs-folder-name>
+   ```
+
+     The bucket-name, dcp-folder-name, and logs-folder-name should match the one used while creating them 
+3. Once submitted successfully, an *time_stamp*\_afi\_id.txt file will be created. Open the file and make a note of the afi-id. Execute the following command to see the status of the AFI:
+
+      `aws ec2 describe-fpga-images --fpga-image-ids <afi_id>`
+
+    Wait for about 30 minutes before the status changes from *pending* to **available**. You can log out and login back to check the status
 
 
-1. Vitis is the development environment used to create host applications and hardware accelerators. It includes host CPU and FPGA compilers as well as profiling and debugging tools
-2. In Vitis, the host application can be written in C or C++ and uses the OpenCL API or the [XRT](https://github.com/Xilinx/XRT) (Xilinx Runtime Library) to interact with the accelerated hardware functions running on the FPGA. The accelerated hardware functions (also referred to as 'hardware kernels', or just 'kernels') can be written in C, C++, OpenCL or RTL
+## Regenerate .awsxclbin
+
+You can regenerate the `.awsxclbin` file as long as you have access to `*agfi_id.txt` and `*.xclbin` files
+
+1. Edit these variable with the corresponding names
+    
+   ```sh
+   export xclbin=<xclbin_filename>
+   export agfi_id=<*_agfi_id.txt>
+   export awsxclbin=<output_name>
+   ```
+    
+1. Generate `.awsxclbin` file
+
+   ```sh
+   xclbinutil -i $xclbin --remove-section PARTITION_METADATA --remove-section SYSTEM_METADATA --replace-section BITSTREAM:RAW:${agfi_id} -o ${awsxclbin}.awsxclbin
+   ```
 
 ---------------------------------------
-<p align="center">Copyright&copy; 2021 Xilinx</p>
+<p align="center">Copyright&copy; 2022 AMD-Xilinx</p>
