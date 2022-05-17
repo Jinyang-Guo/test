@@ -1,55 +1,54 @@
----
-layout: default
----
+# 学习资料
 
-# Additional Material
+## 往届优秀作品
 
-1. [Download Vitis Unified Software](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html)
+### CCC2021风采
 
-1. [Vitis Unified Software Documentation](https://docs.xilinx.com/v/u/en-US/ug1416-vitis-documentation)
+#### CCC2021初赛
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.bilibili.com/video/BV1wu411X7EH?spm_id_from=333.337.search-card.all.click" frameborder="no" scrolling="no"></iframe>
+</div>
 
-1. [Vitis Community Forum](https://support.xilinx.com/s/topic/0TO2E000000YKYAWA4/vitis-acceleration-acceleration?language=en_US)
-
-1. Check out the Get Moving with Alveo articles, start here [Get Moving with Alveo: Acceleration Basics](https://developer.xilinx.com/en/articles/acceleration-basics.html), find the other articles in the series [here](https://developer.xilinx.com/en/articles.html)
-
-1. Check out [Design Principles for Software Programmers](https://docs.xilinx.com/r/en-US/ug1399-vitis-hls/Design-Principles-for-Software-Programmers)
-
-1. Check out [Designing Efficient Kernels](https://docs.xilinx.com/r/en-US/ug1399-vitis-hls/Designing-Efficient-Kernels)
-
-1. [Adaptive Computing Developer YouTube channel](https://www.youtube.com/channel/UCkzIS3hJplxSbVRxRQJW4Ow)
-
-1. [Parallel Programming for FPGAs Book](https://arxiv.org/pdf/1805.03648.pdf), by Ryan Kastner, Janarbek Matai, and Stephen Neuendorffer. [Source code on GitHub](https://github.com/KastnerRG/pp4fpgas)
-
-1. [The ZYNQ Book](http://www.zynqbook.com/), the earlier chapters of the book cover basic concepts, such as pipeline and dataflow.
-
-1. Xilinx Run Time ([XRT](https://github.com/Xilinx/XRT))
-
-1. [PYNQ Project](http://www.pynq.io/)
+#### CCC2021决赛
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://www.bilibili.com/video/BV1db4y147FC?spm_id_from=333.337.search-card.all.click" frameborder="no" scrolling="no"></iframe>
+</div>
 
 
-## Hands-on
 
-This list cover examples and tutorials hosted on [Xilinx GitHub](https://github.com/Xilinx)
+## 竞赛专属培训
 
-1. [Vitis In Depth Tutorial](https://github.com/Xilinx/Vitis-In-Depth-Tutorial)
+### 培训内容
 
-1. [Vitis AWS F1 Developer Labs](https://github.com/Xilinx/Vitis-AWS-F1-Developer-Labs)
+| **培训内容**       | **日期**      |
+| ------------------ | ------------- |
+| 竞赛规则和赛题说明 | 2022年4月下旬 |
+| Vitis HLS 入门     | 2022年4月下旬 |
+| 题目答疑与性能优化 | 2022年5月中旬 |
+| 预决赛赛题和培训   | 2022年6月中旬 |
+| 总决赛赛题和培训   | 2022年7月中旬 |
 
-1. [Vitis Tutorials](https://github.com/Xilinx/Vitis-Tutorials)
 
-1. [Vitis Accel Examples](https://github.com/Xilinx/Vitis_Accel_Examples)
 
-1. [Vitis AI Tutorials](https://github.com/Xilinx/Vitis-AI-Tutorials)
+### pp4fpgas
 
-## Vitis HLS Migration
+pp4fpgas是Xilinx研究院的Steve首席工程师与UCSD的Ryan Kastner教授团队合作推出的电子书。经过多年的工程、科研、教学经验的积累，全书通过10个算法实现案例完整的介绍了通过HLS工具利用C/C++语言快速实现高性能FPGA实现的过程，深入浅出的将HLS实现方法，硬件设计的考虑以及系统优化都一一介绍。
 
-Since Vitis 2020.1 Vitis HLS is the default high-level Synthesis tool, and Vivado HLS is deprecated in Vitis 2020.2.
+[**电子书链接**](https://xupsh.gitbook.io/pp4fpgas-cn/readme/readme)
 
-Please review the Vitis HLS migration guide [here](https://www.xilinx.com/html_docs/xilinx2020_2/vitis_doc/migrating_to_vitis_hls.html#orj1568775346815)
+案例和实例源码仓库<a class="buttons github" href="https://github.com/xupsh/pp4fpgas-cn-hls"><b>View at github</b></a>
 
-## Application Migration Between Alveo U200 and AWS F1
+### Vitis HLS 培训视频
 
-To understand the differences between the AWS F1 and Alveo U200 platforms and how to migrate your application between these platforms, review [Alveo to AWS Migration guide](https://github.com/aws/aws-fpga/blob/master/Vitis/docs/Alveo_to_AWS_F1_Migration.md)
+Vitis HLS 将取代大家可能更为熟悉的Vivado HLS, Vivado HLS 也将止步于2020.1，二者从功能上看十分相似，但整体上Vitis HLS更为完备，例如在默认用户控制设置，自动代码优化和GUI等方面，本次比赛的编译环境将基于Vitis平台。
 
----------------------------------------
-<p align="center">Copyright&copy; 2022 AMD-Xilinx</p>
+[**Vitis HLS 教程**](https://www.xilinx.com/html_docs/xilinx2020_2/vitis_doc/hjv1582730488418.html)
+
+#### 在哔哩哔哩上看Vitis系列教程
+<div style="position: relative; padding: 30% 45%;">
+<iframe style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;" src="https://player.bilibili.com/player.html?cid=211965422&aid=753816989&page=1&as_wide=1&high_quality=1&danmaku=0" frameborder="no" scrolling="no"></iframe>
+</div>
+
+​                 
+[**更多视频**](https://www.youtube.com/watch?v=T4HaM2QONw8&list=PLRr5m7hDN9TI_TbwWxNuzHUUqR-P1Piq6)
+
